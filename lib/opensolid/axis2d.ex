@@ -1,24 +1,27 @@
 defmodule OpenSolid.Axis2d do
-    alias OpenSolid.Geometry.Types
+  alias OpenSolid.Axis2d
+  alias OpenSolid.Point2d
+  alias OpenSolid.Direction2d
 
-    @type point2d :: Types.point2d
-    @type direction2d :: Types.direction2d
-    @type axis2d :: Types.axis2d
+  @enforce_keys [:direction]
+  defstruct origin_point: Point2d.origin, direction: nil
 
-    @spec new(origin_point: point2d, direction: direction2d) :: axis2d
-    def new(origin_point: origin_point, direction: direction) do
-        {:axis2d, origin_point, direction}
+  def x do
+    %Axis2d{origin_point: Point2d.origin, direction: Direction2d.positive_x}
+  end
+
+  def to_json(axis) do
+    %{"originPoint" => axis.origin_point, "direction" => axis.direction}
+  end
+
+  def from_json(json) do
+    with %{"originPoint" => origin_point_json, "direction" => direction_json} <- json,
+      {:ok, origin_point} <- Point2d.from_json(origin_point_json),
+      {:ok, direction} <- Direction2d.from_json(direction_json) do
+      {:ok, %Axis2d{origin_point: origin_point, direction: direction}}
+    else
+      {:error, reason} -> {:error, {"Could not decode Axis2d", reason}}
+      ^json -> {:error, {"Could not decode  Axis2d", json}}
     end
-
-    @spec origin_point(axis2d) :: point2d
-    def origin_point(axis) do
-        {:axis2d, origin_point, _} = axis
-        origin_point
-    end
-
-    @spec direction(axis2d) :: point2d
-    def direction(axis) do
-        {:axis2d, _, direction} = axis
-        direction
-    end
+  end
 end

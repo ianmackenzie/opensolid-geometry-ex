@@ -28,6 +28,7 @@ defmodule OpenSolid.Geometry.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:dialyxir, "~> 0.5", only: [:dev], runtime: false}]
+    [{:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+     {:poison, "~> 3.1"}]
   end
 end

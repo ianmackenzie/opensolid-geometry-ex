@@ -1,41 +1,33 @@
 defmodule OpenSolid.Direction2d do
-  alias OpenSolid.Geometry.Types
+  alias OpenSolid.Direction2d
 
-  @type direction2d :: Types.direction2d
+  defstruct x: 0.0, y: 0.0
 
-  @spec from_components({number, number}) :: direction2d
-  def from_components(components) do
-    {:direction2d, components}
+  def positive_x do
+    %Direction2d{x: 1.0, y: 0.0}
   end
 
-  @spec from_components(number, number) :: direction2d
-  def from_components(x, y) do
-    from_components({x, y})
+  def negative_x do
+    %Direction2d{x: -1.0, y: 0.0}
   end
 
-  @spec components(direction2d) :: {number, number}
-  def components(direction) do
-    {:direction2d, components} = direction
-    components
+  def positive_y do
+    %Direction2d{x: 0.0, y: 1.0}
   end
 
-  @spec x :: direction2d
-  def x do
-    from_components(1.0, 0.0)
+  def negative_y do
+    %Direction2d{x: 0.0, y: -1.0}
   end
 
-  @spec y :: direction2d
-  def y do
-    from_components(0.0, 1.0)
+  def to_json(direction) do
+    [direction.x, direction.y]
   end
 
-  @spec x_component(direction2d) :: number
-  def x_component(direction) do
-    elem((components direction), 0)
-  end
-
-  @spec y_component(direction2d) :: number
-  def y_component(direction) do
-    elem((components direction), 1)
+  def from_json(json) do
+    with [x, y] when is_number(x) and is_number(y) <- json do
+      {:ok, %Direction2d{x: x, y: y}}
+    else
+      _ -> {:error, {"Could not decode Direction2d", json}}
+    end
   end
 end
