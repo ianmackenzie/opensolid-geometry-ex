@@ -1,33 +1,50 @@
 defmodule OpenSolid.Direction2d do
-  alias OpenSolid.Direction2d
+  @opaque t :: {:direction2d, {float, float}}
 
-  defstruct x: 0.0, y: 0.0
-
+  @spec positive_x :: t
   def positive_x do
-    %Direction2d{x: 1.0, y: 0.0}
+    {:direction2d, {1.0, 0.0}}
   end
 
+  @spec negative_x :: t
   def negative_x do
-    %Direction2d{x: -1.0, y: 0.0}
+    {:direction2d, {-1.0, 0.0}}
   end
 
+  @spec positive_y :: t
   def positive_y do
-    %Direction2d{x: 0.0, y: 1.0}
+    {:direction2d, {0.0, 1.0}}
   end
 
+  @spec negative_y :: t
   def negative_y do
-    %Direction2d{x: 0.0, y: -1.0}
+    {:direction2d, {0.0, -1.0}}
   end
 
+  @spec x :: t
+  def x do
+    positive_x()
+  end
+
+  @spec y :: t
+  def y do
+    positive_y()
+  end
+
+  @spec components(t) :: {float, float}
+  def components(direction) do
+    {:direction2d, components_} = direction
+    components_
+  end
+
+  @spec to_json(t) :: term
   def to_json(direction) do
-    [direction.x, direction.y]
+    {x, y} = components(direction)
+    [x, y]
   end
 
-  def from_json(json) do
-    with [x, y] when is_number(x) and is_number(y) <- json do
-      {:ok, %Direction2d{x: x, y: y}}
-    else
-      _ -> {:error, {"Could not decode Direction2d", json}}
-    end
+  @spec from_json(term) :: t
+  def from_json([x, y]) when is_float(x) and is_float(y) do
+    {:direction2d, {x, y}}
   end
 end

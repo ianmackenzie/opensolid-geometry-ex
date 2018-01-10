@@ -1,21 +1,51 @@
 defmodule OpenSolid.Point2d do
-  alias OpenSolid.Point2d
+  alias OpenSolid.Vector2d
 
-  defstruct x: 0.0, y: 0.0
+  @opaque t :: {:point2d, {float, float}}
 
+  @spec origin :: t
   def origin do
-    %Point2d{x: 0.0, y: 0.0}
+    {:point2d, {0.0, 0.0}}
   end
 
+  @spec from_coordinates({float, float}) :: t
+  def from_coordinates({x, y} = coordinates) when is_float(x) and is_float(y) do
+    {:point2d, coordinates}
+  end
+
+  @spec from_coordinates(float, float) :: t
+  def from_coordinates(x, y) when is_float(x) and is_float(y) do
+    {:point2d, {x, y}}
+  end
+
+  @spec coordinates(t) :: {float, float}
+  def coordinates(point) do
+    {:point2d, coordinates_} = point
+    coordinates_
+  end
+
+  @spec vector_to(t, t) :: Vector2d.t
+  def vector_to(first_point, second_point) do
+    {x1, y1} = coordinates(first_point)
+    {x2, y2} = coordinates(second_point)
+    Vector2d.from_components(x2 - x1, y2 - y1)
+  end
+
+  @spec distance_along(t, term) :: float
+  def distance_along(point, axis) do
+    {:axis2d, origin_point, direction} = axis
+    displacement = vector_to(origin_point, point)
+    Vector2d.component_in(displacement, direction)
+  end
+
+  @spec to_json(t) :: term
   def to_json(point) do
-    [point.x, point.y]
+    {x, y} = coordinates(point)
+    [x, y]
   end
 
-  def from_json(json) do
-    with [x, y] when is_number(x) and is_number(y) <- json do
-      {:ok, %Point2d{x: x, y: y}}
-    else
-      _ -> {:error, {"Could not decode Point2d", json}}
-    end
+  @spec from_json(term) :: t
+  def from_json([x, y]) when is_float(x) and is_float(y) do
+    {:point2d, {x, y}}
   end
 end
