@@ -1,24 +1,24 @@
 defmodule OpenSolid.Point2d do
   alias OpenSolid.Vector2d
 
-  @opaque t :: {:point2d, {float, float}}
+  @opaque t :: {:point2d, {number, number}}
 
   @spec origin :: t
   def origin do
     {:point2d, {0.0, 0.0}}
   end
 
-  @spec from_coordinates({float, float}) :: t
-  def from_coordinates({x, y} = coordinates) when is_float(x) and is_float(y) do
+  @spec from_coordinates({number, number}) :: t
+  def from_coordinates(coordinates) do
     {:point2d, coordinates}
   end
 
-  @spec from_coordinates(float, float) :: t
-  def from_coordinates(x, y) when is_float(x) and is_float(y) do
+  @spec from_coordinates(number, number) :: t
+  def from_coordinates(x, y) do
     {:point2d, {x, y}}
   end
 
-  @spec coordinates(t) :: {float, float}
+  @spec coordinates(t) :: {number, number}
   def coordinates(point) do
     {:point2d, coordinates_} = point
     coordinates_
@@ -31,7 +31,7 @@ defmodule OpenSolid.Point2d do
     Vector2d.from_components(x2 - x1, y2 - y1)
   end
 
-  @spec distance_along(t, term) :: float
+  @spec distance_along(t, term) :: number
   def distance_along(point, axis) do
     {:axis2d, origin_point, direction} = axis
     displacement = vector_to(origin_point, point)
@@ -45,7 +45,7 @@ defmodule OpenSolid.Point2d do
   end
 
   @spec from_json(term) :: t
-  def from_json([x, y]) when is_float(x) and is_float(y) do
+  def from_json([x, y]) when is_number(x) and is_number(y) do
     {:point2d, {x, y}}
   end
 end
