@@ -37,6 +37,14 @@ defmodule OpenSolid.Direction2d do
     components_
   end
 
+  @spec rotate_by(t, float) :: t
+  def rotate_by(direction, angle) do
+    {x, y} = components(direction)
+    cos_angle = :math.cos(angle)
+    sin_angle = :math.sin(angle)
+    {:direction2d, {x * cos_angle - y * sin_angle, y * cos_angle + x * sin_angle}}
+  end
+
   @spec to_json(t) :: term
   def to_json(direction) do
     {x, y} = components(direction)
