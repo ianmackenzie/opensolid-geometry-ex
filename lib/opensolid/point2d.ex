@@ -39,7 +39,7 @@ defmodule OpenSolid.Point2d do
     from_coordinates_in_frame(x, y, frame)
   end
 
-  @spec vector_to(t, t) :: Vector2d.t
+  @spec vector_to(t, t) :: Vector2d.t()
   def vector_to(first_point, second_point) do
     {x1, y1} = coordinates(first_point)
     {x2, y2} = coordinates(second_point)

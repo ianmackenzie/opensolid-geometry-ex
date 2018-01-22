@@ -42,7 +42,9 @@ defmodule OpenSolid.Direction2d do
     {x, y} = components(direction)
     cos_angle = :math.cos(angle)
     sin_angle = :math.sin(angle)
-    {:direction2d, {x * cos_angle - y * sin_angle, y * cos_angle + x * sin_angle}}
+    rx = x * cos_angle - y * sin_angle
+    ry = y * cos_angle + x * sin_angle
+    {:direction2d, {rx, ry}}
   end
 
   @spec to_json(t) :: term
